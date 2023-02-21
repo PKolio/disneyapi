@@ -2,6 +2,7 @@ import { HttpService } from './../http.service';
 import { Component, OnInit,ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { Sort } from '@angular/material/sort'
 
 @Component({
   selector: 'app-characters',
@@ -35,6 +36,7 @@ export class CharactersComponent implements OnInit {
   ngOnInit(): void {
     this.getCharList();
   }
+
   // Paginator Configuration
   getCharList(pageIndex?: number, pageSizeOptions?: number[]) {
     this.http.getCharacters(pageIndex, pageSizeOptions)
@@ -54,8 +56,14 @@ export class CharactersComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  //Paginator
   paginatorChanges(event) {
     this.getCharList(event.pageIndex + 1);
     this.getCharList(event.pageSizeOptions);
+  }
+
+  //Sort Characters By Name
+  sortCharacters(sort: Sort):void{
+    this.dataSource.getCharList(sort)
   }
 }
