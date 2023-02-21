@@ -9,7 +9,7 @@ import { MatPaginator } from '@angular/material/paginator';
   styleUrls: ['./characters.component.scss']
 })
 export class CharactersComponent implements OnInit {
-
+  // Columns that will be displayed from API
   displayedColumns: string[] = [
     'CharacterName',
     'TvShows',
@@ -35,7 +35,7 @@ export class CharactersComponent implements OnInit {
   ngOnInit(): void {
     this.getCharList();
   }
-
+  // Paginator Configuration
   getCharList(pageIndex?: number, pageSizeOptions?: number[]) {
     this.http.getCharacters(pageIndex, pageSizeOptions)
       .subscribe((resp: any) => {
