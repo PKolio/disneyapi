@@ -1,2 +1,56 @@
-  <h3>{{ data.films }}</h3>
+<div class="main-container">
+  <mat-form-field appearance="outline">
+    <!-- Search Filter -->
+    <mat-label>Filter</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium" #input>
+  </mat-form-field>
+ <!-- Table Content -->
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource">
 
+      <ng-container matColumnDef="CharacterName">
+        <th mat-header-cell *matHeaderCellDef> Character Name </th>
+        <td mat-cell *matCellDef="let element">
+        <button mat-button id="characterInfo" data-bs-toggle="modal" [attr.data-bs-target]="'#characterModal'">
+          {{element.name}} </button></td>
+      </ng-container>
+
+      <ng-container matColumnDef="TvShows">
+        <th mat-header-cell *matHeaderCellDef> Tv Shows </th>
+        <td mat-cell *matCellDef="let element"> {{element.tvShows}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="VideoGames">
+        <th mat-header-cell *matHeaderCellDef> Video Games </th>
+        <td mat-cell *matCellDef="let element"> {{element.videoGames}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Allies">
+        <th mat-header-cell *matHeaderCellDef> Allies </th>
+        <td mat-cell *matCellDef="let element"> {{element.allies}} </td>
+      </ng-container>
+      <ng-container matColumnDef="Enemies">
+        <th mat-header-cell *matHeaderCellDef> Enemies </th>
+        <td mat-cell *matCellDef="let element"> {{element.enemies}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <!-- Paginator Configuration, getting data from characters.component.ts -->
+    <mat-paginator
+    [pageSize]="paginatorConfig?.items_count"
+    [pageSizeOptions]="paginatorConfig?.pageSizeOptions"
+    [length]="paginatorConfig?.total_items"
+      showFirstLastButtons (page)="paginatorChanges($event)"></mat-paginator>
+  </div>
+</div>
+
+<!-- Modal to open when clicking a character's name -->
+ <div class="modal fade" id="characterModal" tabindex="-1" role="dialog" aria-labelledby="characterModalTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+
+      </div>
+    </div>
+  </div>

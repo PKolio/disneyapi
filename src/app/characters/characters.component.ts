@@ -1,7 +1,7 @@
 import { HttpService } from './../http.service';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { Disneydata } from './disneydata';
+import { Component, OnInit,ViewChild } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-characters',
@@ -10,11 +10,52 @@ import { Disneydata } from './disneydata';
 })
 export class CharactersComponent implements OnInit {
 
-  data: Disneydata;
+  displayedColumns: string[] = [
+    'CharacterName',
+    'TvShows',
+    'VideoGames',
+    'Allies',
+    'Enemies',
+  ];
+  dataSource;
+  paginatorConfig: {
+    items_count: number,
+    total_items: number,
+    pageSizeOptions: number[]
+  }
 
-  constructor(private gd:HttpService) { }
+  // pageSizeOptions: [10, 20, 50, 100, 200, 500];
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  constructor(
+    private http: HttpService
+  ) { }
 
   ngOnInit(): void {
-    this.gd.getCharacters().subscribe(resp => {this.data = resp});
+    this.getCharList();
+  }
+
+  getCharList(pageIndex?: number, pageSizeOptions?: number[]) {
+    this.http.getCharacters(pageIndex, pageSizeOptions)
+      .subscribe((resp: any) => {
+        this.dataSource = new MatTableDataSource(resp.data);
+        this.paginatorConfig = {
+          items_count: resp.count,
+          total_items: resp.count * resp.totalPages,
+          pageSizeOptions: [10, 20, 50, 100, 200, 500]
+        };
+      });
+  }
+
+  //Search and find desired character
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  paginatorChanges(event) {
+    this.getCharList(event.pageIndex + 1);
+    this.getCharList(event.pageSizeOptions);
   }
 }
